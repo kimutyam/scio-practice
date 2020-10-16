@@ -4,8 +4,8 @@ import com.spotify.scio.ContextAndArgs
 import com.spotify.scio.bigtable._
 import kimutyam.practice.scio.adaptor.bigtable.Row
 import kimutyam.practice.scio.domain.PurchaseEvent
-import kimutyam.practice.scio.support.SCollectionOps._
 import kimutyam.practice.scio.support.{DeserializeError, PubSubTopic}
+import kimutyam.practice.scio.support.SCollectionOps._
 
 object PubSub2Bigtable {
 
@@ -29,15 +29,17 @@ object PubSub2Bigtable {
       .map(deserialize)
       .separate()
 
-    eventSc.filter { event =>
+    eventSc
+      .filter { event =>
         event.inCampaignTerm &&
           !event.isLimitedTimeItem
-    }.map(serialize)
+      }
+      .map(serialize)
       .saveAsBigtable(
-      projectId,
-      instanceId,
-      "tableId"
-    )
+        projectId,
+        instanceId,
+        "tableId"
+      )
     sc.run()
   }
 }

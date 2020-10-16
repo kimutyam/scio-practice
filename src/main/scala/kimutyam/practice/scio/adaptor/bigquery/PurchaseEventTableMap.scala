@@ -46,7 +46,7 @@ object PurchaseEventTableMap {
 
   implicit class WidgetEventOps(event: PurchaseEvent) {
 
-    private val purchasedItemTableRow: TableRow = {
+    val purchasedItemTableRow: TableRow = {
       purchasedItemQueryType.toTableRow(
         PurchasedItemRow(
           new JodaInstant(event.ts.toEpochMilli),
@@ -57,7 +57,7 @@ object PurchaseEventTableMap {
       )
     }
 
-    private val usedCouponTableRow: TableRow = {
+    val usedCouponTableRow: TableRow = {
       usedCouponQueryType.toTableRow(
         UsedCouponRow(
           new JodaInstant(event.ts.toEpochMilli),
@@ -67,7 +67,7 @@ object PurchaseEventTableMap {
       )
     }
 
-    def toTableMap(projectId: String): TableMap = {
+    def tableMap(projectId: String): TableMap = {
       Map(
         purchasedItemTableSpec(projectId) -> Seq(purchasedItemTableRow),
         usedCouponTableSpec(projectId) -> Seq(usedCouponTableRow)

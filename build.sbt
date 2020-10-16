@@ -13,7 +13,8 @@ lazy val commonSettings = Defaults.coreDefaultSettings ++ Seq(
     "-unchecked",
     "-Ywarn-dead-code",
     "-Ywarn-numeric-widen",
-    "-Xfatal-warnings"
+    "-Xfatal-warnings",
+    "-Ymacro-annotations"
   ),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 )

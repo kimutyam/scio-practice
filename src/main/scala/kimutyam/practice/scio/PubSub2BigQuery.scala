@@ -64,7 +64,7 @@ object PubSub2BigQuery {
       .separate()
 
     val tableMapSc = eventSc
-      .map(_.toTableMap(projectId))
+      .map(_.tableMap(projectId))
 
     save(
       tableMapSc,
