@@ -19,7 +19,7 @@ object PubSub2BigQuery {
 
   def deserialize(jsonString: String): Either[DeserializeError, PurchaseEvent] = ???
 
-  def save(
+  def saveAsMultiBigQueryTable(
             results: SCollection[TableMap],
             tableInfos: Seq[TableInfo]
           ): Unit = {
@@ -66,7 +66,7 @@ object PubSub2BigQuery {
     val tableMapSc = eventSc
       .map(_.tableMap(projectId))
 
-    save(
+    saveAsMultiBigQueryTable(
       tableMapSc,
       Seq(
         TableInfo(purchasedItemTableSpec(projectId), purchasedItemSchema),

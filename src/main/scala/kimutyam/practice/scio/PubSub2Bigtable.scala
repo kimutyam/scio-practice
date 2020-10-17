@@ -2,12 +2,15 @@ package kimutyam.practice.scio
 
 import com.spotify.scio.ContextAndArgs
 import com.spotify.scio.bigtable._
+import org.slf4j.LoggerFactory
 import kimutyam.practice.scio.adaptor.bigtable.Row
 import kimutyam.practice.scio.domain.PurchaseEvent
 import kimutyam.practice.scio.support.{DeserializeError, PubSubTopic}
 import kimutyam.practice.scio.support.SCollectionOps._
 
 object PubSub2Bigtable {
+
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   private def deserialize(jsonString: String): Either[DeserializeError, PurchaseEvent] = ???
 
@@ -23,13 +26,14 @@ object PubSub2Bigtable {
     val topicKey = args("pubSubTopicKey")
     val instanceId = args("bigtableInstanceId")
 
-    // TODO デッドキュー
-    val (_, eventSc) = sc
+    val (errors, events) = sc
       .pubsubTopic[String](PubSubTopic.name(projectId, topicKey))
       .map(deserialize)
       .separate()
 
-    eventSc
+    errors.tap(e => logger.error(e.message))
+
+    events
       .filter { event =>
         event.inCampaignTerm &&
           !event.isLimitedTimeItem
